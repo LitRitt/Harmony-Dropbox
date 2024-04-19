@@ -61,7 +61,7 @@ public class DropboxService: NSObject, Service
     public static let shared = DropboxService()
     
     public let localizedName = NSLocalizedString("Dropbox", comment: "")
-    public let identifier = "com.rileytestut.Harmony.Dropbox"
+    public let identifier = "com.litritt.Harmony.Dropbox"
     
     public var clientID: String? {
         didSet {
@@ -73,7 +73,7 @@ public class DropboxService: NSObject, Service
     public var preferredDirectoryName: String?
     
     internal private(set) var dropboxClient: DropboxClient?
-    internal let responseQueue = DispatchQueue(label: "com.rileytestut.Harmony.Dropbox.responseQueue")
+    internal let responseQueue = DispatchQueue(label: "com.litritt.Harmony.Dropbox.responseQueue")
     
     private var authorizationCompletionHandlers = [(Result<Account, AuthenticationError>) -> Void]()
     
