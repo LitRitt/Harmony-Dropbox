@@ -79,10 +79,10 @@ public class DropboxService: NSObject, Service
     
     private var accountID: String? {
         get {
-            return UserDefaults.standard.string(forKey: "harmony-dropbox_accountID")
+            return UserDefaults.standard.string(forKey: "harmony-dropbox-new_accountID")
         }
         set {
-            UserDefaults.standard.set(newValue, forKey: "harmony-dropbox_accountID")
+            UserDefaults.standard.set(newValue, forKey: "harmony-dropbox-new_accountID")
         }
     }
     
@@ -122,6 +122,13 @@ public extension DropboxService
         
         self.accountID = nil
         completionHandler(.success)
+    }
+    
+    func deauthenticate()
+    {
+        DropboxClientsManager.unlinkClients()
+        
+        self.accountID = nil
     }
     
     func handleDropboxURL(_ url: URL) -> Bool
