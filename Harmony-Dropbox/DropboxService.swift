@@ -133,24 +133,28 @@ public extension DropboxService
     
     func handleDropboxURL(_ url: URL) -> Bool
     {
-        guard let result = DropboxClientsManager.handleRedirectURL(url) else { return false }
-        
-        switch result
-        {
-        case .cancel:
-            self.authorizationCompletionHandlers.forEach { $0(.failure(.other(GeneralError.cancelled))) }
-            self.authorizationCompletionHandlers.removeAll()
-            
-        case .success:
-            self.finishAuthentication()
-            
-        case .error(let error, let description):
-            Logger.sync.error("Failed to authenticate with Dropbox. \(String(describing: error), privacy: .public) \(description, privacy: .public)")
-            
-            let oAuthError = OAuthError(error: error, description: description)
-            self.authorizationCompletionHandlers.forEach { $0(.failure(.other(oAuthError))) }
-            
-            self.authorizationCompletionHandlers.removeAll()
+        DropboxClientsManager.handleRedirectURL(url) { result in
+            switch result
+            {
+            case .cancel:
+                self.authorizationCompletionHandlers.forEach { $0(.failure(.other(GeneralError.cancelled))) }
+                self.authorizationCompletionHandlers.removeAll()
+                
+            case .success:
+                self.finishAuthentication()
+                
+            case .error(let error, let description):
+                let description = description ?? "No  error description."
+                
+                Logger.sync.error("Failed to authenticate with Dropbox. \(String(describing: error), privacy: .public) \(description, privacy: .public)")
+                
+                let oAuthError = OAuthError(error: error, description: description)
+                self.authorizationCompletionHandlers.forEach { $0(.failure(.other(oAuthError))) }
+                
+                self.authorizationCompletionHandlers.removeAll()
+                
+            case .none: break
+            }
         }
         
         return true
