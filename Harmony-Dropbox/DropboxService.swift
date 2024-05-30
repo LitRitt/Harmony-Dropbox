@@ -100,9 +100,15 @@ public extension DropboxService
     {
         self.authorizationCompletionHandlers.append(completionHandler)
         
-        DropboxClientsManager.authorizeFromController(UIApplication.shared, controller: viewController) { (url) in
+        let scopeRequest = ScopeRequest(scopeType: .user, scopes: ["account_info.read", "files.metadata.write", "files.metadata.read", "files.content.write", "files.content.read"], includeGrantedScopes: true)
+        
+        DropboxClientsManager.authorizeFromControllerV2(UIApplication.shared,
+                                                        controller: viewController,
+                                                        loadingStatusDelegate: nil,
+                                                        openURL: { (url) in
             UIApplication.shared.open(url, options: [:], completionHandler: nil)
-        }
+        },
+                                                        scopeRequest: scopeRequest)
     }
     
     func authenticateInBackground(completionHandler: @escaping (Result<Account, AuthenticationError>) -> Void)
