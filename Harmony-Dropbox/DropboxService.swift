@@ -59,6 +59,7 @@ extension DropboxService
 public class DropboxService: NSObject, Service
 {
     public static let shared = DropboxService()
+    public static let sharedDelta = DropboxService()
     
     public let localizedName = NSLocalizedString("Dropbox", comment: "")
     public let identifier = "com.litritt.Harmony.Dropbox"
